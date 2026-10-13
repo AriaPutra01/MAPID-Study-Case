@@ -50,6 +50,19 @@ npm run dev
 
 ---
 
+### 4. Menjalankan via Docker Compose (Produksi)
+
+Jalankan seluruh stack aplikasi (PostgreSQL + Express API + Nginx Web) secara otomatis:
+
+```bash
+docker compose up -d --build
+```
+
+- Aplikasi dapat diakses di: `http://localhost` (Port 80)
+- Skema PostgreSQL otomatis diinisialisasi dari `server/schema.sql`.
+
+---
+
 ## 📡 REST API Endpoints
 
 Base URL: `http://localhost:3000/api`
