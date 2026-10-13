@@ -1,21 +1,35 @@
 import { z } from "zod";
+import { REPORT_STATUSES, UPDATE_STATUSES } from "../types/report.ts";
 
-export const listQuerySchema = z.object({
-  status: z.enum(["pending", "approved", "rejected"]).optional(),
+/**
+ * 1. GET /api/reports
+ * Validasi query parameter untuk pencarian dan filter status
+ */
+export const listReportsQuerySchema = z.object({
+  status: z.enum(REPORT_STATUSES).optional(),
   search: z.string().trim().max(255).optional(),
 });
-export type ListQueryRequest = z.infer<typeof listQuerySchema>;
+export type ListReportsQuery = z.infer<typeof listReportsQuerySchema>;
 
-export const createReportSchema = z.object({
+/**
+ * 2. POST /api/reports
+ * Validasi body JSON saat membuat laporan baru
+ */
+export const createReportBodySchema = z.object({
   name: z.string().trim().min(1, "Nama wajib diisi").max(255, "Nama maksimal 255 karakter"),
   description: z.string().trim().min(1, "Deskripsi wajib diisi"),
 });
-export type CreateReportRequest = z.infer<typeof createReportSchema>;
+export type CreateReportBody = z.infer<typeof createReportBodySchema>;
 
-export const updateStatusSchema = z.enum(["approved", "rejected"], {
-  error: "Status harus 'approved' atau 'rejected'",
-})
-export type UpdateStatusRequest = z.infer<typeof updateStatusSchema>;
+/**
+ * 3. PATCH /api/reports/:id/status
+ * Validasi parameter route :id dan body JSON status
+ */
+export const reportIdParamSchema = z.object({
+  id: z.coerce.number().int().positive("ID harus bilangan bulat positif"),
+});
 
-export const idSchema = z.number().int().positive()
-export type IdRequest = z.infer<typeof idSchema>;
+export const updateReportStatusBodySchema = z.object({
+  status: z.enum(UPDATE_STATUSES),
+});
+export type UpdateReportStatusBody = z.infer<typeof updateReportStatusBodySchema>;
